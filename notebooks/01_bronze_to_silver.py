@@ -1,4 +1,8 @@
 # Databricks notebook source
+# /// script
+# [tool.databricks.environment]
+# environment_version = "6"
+# ///
 # MAGIC %md
 # MAGIC Read raw Bronze data from ADLS to confirm the pipeline connection and inspect its structure.
 
@@ -264,12 +268,11 @@ df_silver.select(numeric_cols).summary("count", "min", "mean", "max").show()
 silver_path = f"abfss://healthcare-data@{storage_account_name}.dfs.core.windows.net/silver/diabetic_encounters"
 quarantine_path = f"abfss://healthcare-data@{storage_account_name}.dfs.core.windows.net/silver/quarantine_invalid_gender"
 
-df_silver.write.mode("overwrite").parquet(silver_path)
-invalid_gender.write.mode("overwrite").parquet(quarantine_path)
+df_silver.write.format("delta").mode("overwrite").save(silver_path)
+invalid_gender.write.format("delta").mode("overwrite").save(quarantine_path)
 
-# Read back from storage to prove the write worked
-silver_check = spark.read.parquet(silver_path)
-quarantine_check = spark.read.parquet(quarantine_path)
+silver_check = spark.read.format("delta").load(silver_path)
+quarantine_check = spark.read.format("delta").load(quarantine_path)
 
 print("Silver rows:", silver_check.count(), "| columns:", len(silver_check.columns))
 print("Quarantine rows:", quarantine_check.count())
@@ -281,7 +284,7 @@ print("Quarantine rows:", quarantine_check.count())
 
 # COMMAND ----------
 
-silver = spark.read.parquet(silver_path)
+silver = spark.read.format("delta").load(silver_path)
 total = silver.count()
 
 checks = []
@@ -344,5 +347,5 @@ report = spark.createDataFrame(
 report.filter(col("status") == "FAIL").show(truncate=False)
 
 report_path = f"abfss://healthcare-data@{storage_account_name}.dfs.core.windows.net/silver/data_quality_report"
-report.write.mode("overwrite").parquet(report_path)
+report.write.format("delta").mode("overwrite").save(report_path)
 print("Total checks:", report.count(), "| Failed:", report.filter(col("status") == "FAIL").count())
