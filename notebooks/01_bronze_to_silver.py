@@ -58,6 +58,11 @@ df_clean.select([
 # COMMAND ----------
 
 # MAGIC %md
+# MAGIC # No-op: the source already uses the text "None" for "test not performed", so these columns contain no nulls
+
+# COMMAND ----------
+
+# MAGIC %md
 # MAGIC Apply the missing-value treatments: drop `weight`, recode lab/admin columns, drop rows with missing diagnoses.
 
 # COMMAND ----------
