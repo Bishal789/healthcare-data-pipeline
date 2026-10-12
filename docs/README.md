@@ -4,7 +4,7 @@
 
 An end-to-end data platform on Azure: raw hospital records go in, and a governed Bronze/Silver/Gold lakehouse, a Power BI dashboard and a 30-day readmission risk model come out.
 
-![Dashboard overview](docs/dashboard.png)
+![Dashboard overview](dashboard.png)
 
 ## Business problem
 
@@ -63,13 +63,13 @@ Python, SQL, PySpark, Azure Data Lake Storage Gen2, Azure Databricks (Serverless
 
 Power BI reads the Gold Delta tables directly from ADLS Gen2 (no cluster running), with DAX measures for encounters, 30-day readmissions and readmission rate (including a rate that excludes patients not at risk).
 
-![Model risk page](docs/dashboard_model_risk.png)
+![Model risk page](dashboard_model_risk.png)
 
 The `.pbix` file is in [`powerbi/`](powerbi/).
 
 ## Machine learning: 30-day readmission risk
 
-Full write-up: [`docs/ml_model.md`](docs/ml_model.md).
+Full write-up: [`ml_model.md`](ml_model.md).
 
 | | |
 |---|---|
@@ -87,7 +87,7 @@ Every patient is scored out-of-fold (5-fold, grouped by patient) and assigned a 
 | Medium | 19,864 | 15.3% |
 | Low | 69,524 | 8.2% |
 
-## Limitations (stated honestly)
+## Limitations
 
 - **Modest signal.** ROC-AUC around 0.66 supports ranking groups of patients, not individual decisions.
 - **Scores are not probabilities.** Class weighting inflates raw scores and no calibration was applied, so bands are rank-based.
@@ -131,5 +131,5 @@ requirements.txt
 
 ## Author
 
-**Bishal Bidari**: Data Analyst, Master of IT (ACU). About 3 years of healthcare data and software engineering experience.
+**Bishal Bidari**: Emerging Data Engineer | Data Analyst, Master of IT (ACU). About 3 years of healthcare data and software engineering experience.
 [GitHub](https://github.com/Bishal789) · [LinkedIn](https://www.linkedin.com/in/bishal555/)
